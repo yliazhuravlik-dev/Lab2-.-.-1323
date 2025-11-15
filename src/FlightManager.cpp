@@ -205,7 +205,7 @@ void FlightManager::searchByAircraftType() {
 void FlightManager::runMenu() {
     int choice;  // Переменная для хранения выбора пользователя
     
-    // Основной цикл меню
+    // Основной цикл меню.
     do {
         // Отображение меню
         std::cout << "\n=== Меню управления рейсами ===" << std::endl;
