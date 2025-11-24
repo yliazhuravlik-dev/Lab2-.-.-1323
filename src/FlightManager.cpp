@@ -39,7 +39,9 @@ void FlightManager::sortFlights() {
     for (int i = 0; i < size - 1; i++) {
         for (int j = 0; j < size - i - 1; j++) {
             if (!(*flights[j] < *flights[j + 1])) {
-                std::swap(flights[j], flights[j + 1]);
+                AEROFLOT* temp = flights[j];
+                flights[j] = flights[j + 1];
+                flights[j + 1] = temp;
             }
         }
     }
@@ -104,6 +106,7 @@ void FlightManager::deleteFlight() {
     
     delete flights[index - 1];
     
+    // Сдвигаем элементы
     for (int i = index - 1; i < size - 1; i++) {
         flights[i] = flights[i + 1];
     }
