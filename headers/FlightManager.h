@@ -21,7 +21,7 @@ public:
     void deleteFlight();
     void displayAllFlights();
     void searchByAircraftType();
-    void processTextFile();  // ДОБАВИТЬ ЭТУ СТРОКУ - объявление метода
+    void processTextFile();
     void runMenu();
 };
 
