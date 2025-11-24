@@ -6,21 +6,21 @@
 #include <algorithm>
 #include <stdexcept>
 
-// Конструктор
+// Constructor
 FlightManager::FlightManager() : flights(nullptr), capacity(0), size(0) {
-    std::cout << "Вызван конструктор FlightManager" << std::endl;
+    std::cout << "FlightManager constructor called" << std::endl;
 }
 
-// Деструктор
+// Destructor
 FlightManager::~FlightManager() {
     for (int i = 0; i < size; i++) {
         delete flights[i];
     }
     delete[] flights;
-    std::cout << "Вызван деструктор FlightManager" << std::endl;
+    std::cout << "FlightManager destructor called" << std::endl;
 }
 
-// Увеличение емкости массива
+// Increase array capacity
 void FlightManager::resize() {
     int newCapacity = (capacity == 0) ? 2 : capacity * 2;
     AEROFLOT** newFlights = new AEROFLOT*[newCapacity];
@@ -34,7 +34,7 @@ void FlightManager::resize() {
     capacity = newCapacity;
 }
 
-// Сортировка рейсов
+// Sort flights by destination
 void FlightManager::sortFlights() {
     for (int i = 0; i < size - 1; i++) {
         for (int j = 0; j < size - i - 1; j++) {
@@ -47,142 +47,143 @@ void FlightManager::sortFlights() {
     }
 }
 
-// Добавление рейса
+// Add new flight
 void FlightManager::addFlight() {
     if (size >= capacity) {
         resize();
     }
     
     flights[size] = new AEROFLOT();
+    std::cout << "=== Adding New Flight ===" << std::endl;
     std::cin >> *flights[size];
     size++;
     
     sortFlights();
-    std::cout << "Рейс добавлен и отсортирован!" << std::endl;
+    std::cout << "Flight added and sorted!" << std::endl;
 }
 
-// Редактирование рейса
+// Edit existing flight
 void FlightManager::editFlight() {
     if (size == 0) {
-        std::cout << "Нет рейсов для редактирования!" << std::endl;
+        std::cout << "No flights available for editing!" << std::endl;
         return;
     }
     
     displayAllFlights();
     
     int index;
-    std::cout << "Введите номер рейса для редактирования (1-" << size << "): ";
+    std::cout << "Enter flight number to edit (1-" << size << "): ";
     std::cin >> index;
     
     if (index < 1 || index > size) {
-        std::cout << "Неверный номер!" << std::endl;
+        std::cout << "Invalid number!" << std::endl;
         return;
     }
     
-    std::cout << "Редактирование рейса:" << std::endl;
+    std::cout << "=== Editing Flight ===" << std::endl;
     std::cin >> *flights[index - 1];
     
     sortFlights();
-    std::cout << "Рейс отредактирован и отсортирован!" << std::endl;
+    std::cout << "Flight edited and sorted!" << std::endl;
 }
 
-// Удаление рейса
+// Delete flight
 void FlightManager::deleteFlight() {
     if (size == 0) {
-        std::cout << "Нет рейсов для удаления!" << std::endl;
+        std::cout << "No flights available for deletion!" << std::endl;
         return;
     }
     
     displayAllFlights();
     
     int index;
-    std::cout << "Введите номер рейса для удаления (1-" << size << "): ";
+    std::cout << "Enter flight number to delete (1-" << size << "): ";
     std::cin >> index;
     
     if (index < 1 || index > size) {
-        std::cout << "Неверный номер!" << std::endl;
+        std::cout << "Invalid number!" << std::endl;
         return;
     }
     
     delete flights[index - 1];
     
-    // Сдвигаем элементы
+    // Shift elements
     for (int i = index - 1; i < size - 1; i++) {
         flights[i] = flights[i + 1];
     }
     size--;
     
-    std::cout << "Рейс удален!" << std::endl;
+    std::cout << "Flight deleted!" << std::endl;
 }
 
-// Показать все рейсы
+// Display all flights
 void FlightManager::displayAllFlights() {
     if (size == 0) {
-        std::cout << "Нет рейсов для отображения!" << std::endl;
+        std::cout << "No flights to display!" << std::endl;
         return;
     }
     
-    std::cout << "\n=== Все рейсы ===" << std::endl;
+    std::cout << "\n=== All Flights ===" << std::endl;
     for (int i = 0; i < size; i++) {
         std::cout << (i + 1) << ". " << *flights[i] << std::endl;
     }
 }
 
-// Поиск по типу самолета
+// Search by aircraft type
 void FlightManager::searchByAircraftType() {
     if (size == 0) {
-        std::cout << "Нет рейсов для поиска!" << std::endl;
+        std::cout << "No flights available for search!" << std::endl;
         return;
     }
     
     char type[50];
-    std::cout << "Введите тип самолета для поиска: ";
+    std::cout << "Enter aircraft type to search: ";
     std::cin >> type;
     
     bool found = false;
-    std::cout << "\n=== Рейсы с типом самолета '" << type << "' ===" << std::endl;
+    std::cout << "\n=== Flights with aircraft type '" << type << "' ===" << std::endl;
     
     for (int i = 0; i < size; i++) {
         const char* currentType = flights[i]->getAircraftType();
         if (currentType && strcmp(currentType, type) == 0) {
-            std::cout << "- Пункт назначения: " << flights[i]->getDestination() 
-                      << ", Номер рейса: " << flights[i]->getFlightNumber() << std::endl;
+            std::cout << "- Destination: " << flights[i]->getDestination() 
+                      << ", Flight Number: " << flights[i]->getFlightNumber() << std::endl;
             found = true;
         }
     }
     
     if (!found) {
-        std::cout << "Рейсов с таким типом самолета не найдено!" << std::endl;
+        std::cout << "No flights found with this aircraft type!" << std::endl;
     }
 }
 
-// Обработка текстового файла
+// Process text file
 void FlightManager::processTextFile() {
     char filename[100];
-    std::cout << "Введите имя файла для обработки: ";
+    std::cout << "Enter filename to process: ";
     std::cin >> filename;
     
     try {
         TextProcessor::reverseSentences(filename);
     } catch (const std::exception& e) {
-        std::cout << "Ошибка при обработке файла: " << e.what() << std::endl;
+        std::cout << "Error processing file: " << e.what() << std::endl;
     }
 }
 
-// Главное меню
+// Main menu
 void FlightManager::runMenu() {
     int choice;
     
     do {
-        std::cout << "\n=== Меню управления рейсами ===" << std::endl;
-        std::cout << "1. Добавить рейс" << std::endl;
-        std::cout << "2. Редактировать рейс" << std::endl;
-        std::cout << "3. Удалить рейс" << std::endl;
-        std::cout << "4. Показать все рейсы" << std::endl;
-        std::cout << "5. Поиск по типу самолета" << std::endl;
-        std::cout << "6. Обработать текст из файла" << std::endl;
-        std::cout << "0. Выход" << std::endl;
-        std::cout << "Выберите действие: ";
+        std::cout << "\n=== Flight Management System ===" << std::endl;
+        std::cout << "1. Add Flight" << std::endl;
+        std::cout << "2. Edit Flight" << std::endl;
+        std::cout << "3. Delete Flight" << std::endl;
+        std::cout << "4. Display All Flights" << std::endl;
+        std::cout << "5. Search by Aircraft Type" << std::endl;
+        std::cout << "6. Process Text File" << std::endl;
+        std::cout << "0. Exit" << std::endl;
+        std::cout << "Choose action: ";
         std::cin >> choice;
         
         try {
@@ -206,13 +207,13 @@ void FlightManager::runMenu() {
                     processTextFile();
                     break;
                 case 0:
-                    std::cout << "Выход из программы..." << std::endl;
+                    std::cout << "Exiting program..." << std::endl;
                     break;
                 default:
-                    throw std::invalid_argument("Неверный выбор меню!");
+                    throw std::invalid_argument("Invalid menu choice!");
             }
         } catch (const std::exception& e) {
-            std::cout << "Ошибка: " << e.what() << std::endl;
+            std::cout << "Error: " << e.what() << std::endl;
         }
         
     } while (choice != 0);
