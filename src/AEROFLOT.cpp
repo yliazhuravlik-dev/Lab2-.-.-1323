@@ -1,7 +1,20 @@
 // AEROFLOT.cpp
+#define _CRT_SECURE_NO_WARNINGS  // ОТКЛЮЧАЕМ ПРЕДУПРЕЖДЕНИЯ О БЕЗОПАСНОСТИ
 #include "AEROFLOT.h"
 #include <iostream>
 #include <cstring>
+
+// Безопасное копирование строки
+void safeStringCopy(char*& dest, const char* src) {
+    if (dest) {
+        delete[] dest;
+        dest = nullptr;
+    }
+    if (src) {
+        dest = new char[strlen(src) + 1];
+        strcpy(dest, src);  // Теперь безопасно, т.к. выделили нужный размер
+    }
+}
 
 // Конструктор по умолчанию
 AEROFLOT::AEROFLOT() : destination(nullptr), flightNumber(0), aircraftType(nullptr) {
@@ -10,39 +23,15 @@ AEROFLOT::AEROFLOT() : destination(nullptr), flightNumber(0), aircraftType(nullp
 
 // Конструктор с параметрами
 AEROFLOT::AEROFLOT(const char* dest, int number, const char* type) : flightNumber(number) {
-    if (dest) {
-        destination = new char[strlen(dest) + 1];
-        strcpy(destination, dest);
-    } else {
-        destination = nullptr;
-    }
-    
-    if (type) {
-        aircraftType = new char[strlen(type) + 1];
-        strcpy(aircraftType, type);
-    } else {
-        aircraftType = nullptr;
-    }
-    
+    safeStringCopy(destination, dest);
+    safeStringCopy(aircraftType, type);
     std::cout << "Вызван конструктор с параметрами для AEROFLOT" << std::endl;
 }
 
 // Конструктор копирования
 AEROFLOT::AEROFLOT(const AEROFLOT& other) : flightNumber(other.flightNumber) {
-    if (other.destination) {
-        destination = new char[strlen(other.destination) + 1];
-        strcpy(destination, other.destination);
-    } else {
-        destination = nullptr;
-    }
-    
-    if (other.aircraftType) {
-        aircraftType = new char[strlen(other.aircraftType) + 1];
-        strcpy(aircraftType, other.aircraftType);
-    } else {
-        aircraftType = nullptr;
-    }
-    
+    safeStringCopy(destination, other.destination);
+    safeStringCopy(aircraftType, other.aircraftType);
     std::cout << "Вызван конструктор копирования для AEROFLOT" << std::endl;
 }
 
@@ -56,52 +45,23 @@ AEROFLOT::~AEROFLOT() {
 // Оператор присваивания
 AEROFLOT& AEROFLOT::operator=(const AEROFLOT& other) {
     if (this != &other) {
-        // Освобождаем старую память
-        delete[] destination;
-        delete[] aircraftType;
-        
-        // Копируем новые данные
-        if (other.destination) {
-            destination = new char[strlen(other.destination) + 1];
-            strcpy(destination, other.destination);
-        } else {
-            destination = nullptr;
-        }
-        
         flightNumber = other.flightNumber;
-        
-        if (other.aircraftType) {
-            aircraftType = new char[strlen(other.aircraftType) + 1];
-            strcpy(aircraftType, other.aircraftType);
-        } else {
-            aircraftType = nullptr;
-        }
+        safeStringCopy(destination, other.destination);
+        safeStringCopy(aircraftType, other.aircraftType);
     }
     return *this;
 }
 
 // Set-функции
 void AEROFLOT::setDestination(const char* dest) {
-    delete[] destination;
-    if (dest) {
-        destination = new char[strlen(dest) + 1];
-        strcpy(destination, dest);
-    } else {
-        destination = nullptr;
-    }
+    safeStringCopy(destination, dest);
 }
 
 void AEROFLOT::setAircraftType(const char* type) {
-    delete[] aircraftType;
-    if (type) {
-        aircraftType = new char[strlen(type) + 1];
-        strcpy(aircraftType, type);
-    } else {
-        aircraftType = nullptr;
-    }
+    safeStringCopy(aircraftType, type);
 }
 
-// Перегрузка оператора вывода (РЕАЛИЗАЦИЯ)
+// Перегрузка оператора вывода
 std::ostream& operator<<(std::ostream& os, const AEROFLOT& flight) {
     os << "Рейс №" << flight.flightNumber;
     if (flight.destination) {
@@ -117,7 +77,7 @@ std::ostream& operator<<(std::ostream& os, const AEROFLOT& flight) {
     return os;
 }
 
-// Перегрузка оператора ввода (РЕАЛИЗАЦИЯ)
+// Перегрузка оператора ввода
 std::istream& operator>>(std::istream& is, AEROFLOT& flight) {
     char buffer[100];
     
