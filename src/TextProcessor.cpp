@@ -1,4 +1,3 @@
-// TextProcessor.cpp
 #define _CRT_SECURE_NO_WARNINGS
 #include "TextProcessor.h"
 #include <iostream>
@@ -12,7 +11,7 @@ void TextProcessor::reverseSentences(const char* filename) {
     std::ifstream file(filename);
     
     if (!file.is_open()) {
-        throw std::runtime_error("Не удалось открыть файл!");
+        throw std::runtime_error("Failed to open file!");
     }
     
     std::vector<std::string> sentences;
@@ -42,7 +41,7 @@ void TextProcessor::reverseSentences(const char* filename) {
         sentences.push_back(currentSentence);
     }
     
-    std::cout << "\n=== Текст с предложениями в обратном порядке ===" << std::endl;
+    std::cout << "\n=== Text with sentences in reverse order ===" << std::endl;
     for (int i = (int)sentences.size() - 1; i >= 0; i--) {
         std::cout << sentences[i] << std::endl;
     }
