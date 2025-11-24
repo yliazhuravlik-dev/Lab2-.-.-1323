@@ -2,8 +2,8 @@
 #include "FlightManager.h"
 
 int main() {
-    std::cout << "=== Лабораторная работа №2 ===" << std::endl;
-    std::cout << "=== Система управления рейсами Аэрофлота ===" << std::endl;
+    std::cout << "=== Laboratory Work #2 ===" << std::endl;
+    std::cout << "=== AEROFLOT Flight Management System ===" << std::endl;
     
     FlightManager manager;
     manager.runMenu();
