@@ -140,7 +140,8 @@ void FlightManager::searchByAircraftType() {
     std::cout << "\n=== Рейсы с типом самолета '" << type << "' ===" << std::endl;
     
     for (int i = 0; i < size; i++) {
-        if (strcmp(flights[i]->getAircraftType(), type) == 0) {
+        const char* currentType = flights[i]->getAircraftType();
+        if (currentType && strcmp(currentType, type) == 0) {
             std::cout << "- Пункт назначения: " << flights[i]->getDestination() 
                       << ", Номер рейса: " << flights[i]->getFlightNumber() << std::endl;
             found = true;
@@ -152,7 +153,7 @@ void FlightManager::searchByAircraftType() {
     }
 }
 
-// Обработка текстового файла - ДОБАВЛЕННЫЙ МЕТОД!
+// Обработка текстового файла
 void FlightManager::processTextFile() {
     char filename[100];
     std::cout << "Введите имя файла для обработки: ";
@@ -199,7 +200,7 @@ void FlightManager::runMenu() {
                     searchByAircraftType();
                     break;
                 case 6:
-                    processTextFile();  // ДОБАВЛЕНО!
+                    processTextFile();
                     break;
                 case 0:
                     std::cout << "Выход из программы..." << std::endl;
