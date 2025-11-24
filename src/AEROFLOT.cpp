@@ -1,10 +1,10 @@
 // AEROFLOT.cpp
-#define _CRT_SECURE_NO_WARNINGS  // ОТКЛЮЧАЕМ ПРЕДУПРЕЖДЕНИЯ О БЕЗОПАСНОСТИ
+#define _CRT_SECURE_NO_WARNINGS
 #include "AEROFLOT.h"
 #include <iostream>
 #include <cstring>
 
-// Безопасное копирование строки
+// Safe string copy function
 void safeStringCopy(char*& dest, const char* src) {
     if (dest) {
         delete[] dest;
@@ -12,37 +12,37 @@ void safeStringCopy(char*& dest, const char* src) {
     }
     if (src) {
         dest = new char[strlen(src) + 1];
-        strcpy(dest, src);  // Теперь безопасно, т.к. выделили нужный размер
+        strcpy(dest, src);
     }
 }
 
-// Конструктор по умолчанию
+// Default constructor
 AEROFLOT::AEROFLOT() : destination(nullptr), flightNumber(0), aircraftType(nullptr) {
-    std::cout << "Вызван конструктор по умолчанию для AEROFLOT" << std::endl;
+    std::cout << "Default constructor called for AEROFLOT" << std::endl;
 }
 
-// Конструктор с параметрами
+// Parameterized constructor
 AEROFLOT::AEROFLOT(const char* dest, int number, const char* type) : flightNumber(number) {
     safeStringCopy(destination, dest);
     safeStringCopy(aircraftType, type);
-    std::cout << "Вызван конструктор с параметрами для AEROFLOT" << std::endl;
+    std::cout << "Parameterized constructor called for AEROFLOT" << std::endl;
 }
 
-// Конструктор копирования
+// Copy constructor
 AEROFLOT::AEROFLOT(const AEROFLOT& other) : flightNumber(other.flightNumber) {
     safeStringCopy(destination, other.destination);
     safeStringCopy(aircraftType, other.aircraftType);
-    std::cout << "Вызван конструктор копирования для AEROFLOT" << std::endl;
+    std::cout << "Copy constructor called for AEROFLOT" << std::endl;
 }
 
-// Деструктор
+// Destructor
 AEROFLOT::~AEROFLOT() {
-    std::cout << "Вызван деструктор для AEROFLOT" << std::endl;
+    std::cout << "Destructor called for AEROFLOT" << std::endl;
     delete[] destination;
     delete[] aircraftType;
 }
 
-// Оператор присваивания
+// Assignment operator
 AEROFLOT& AEROFLOT::operator=(const AEROFLOT& other) {
     if (this != &other) {
         flightNumber = other.flightNumber;
@@ -52,7 +52,7 @@ AEROFLOT& AEROFLOT::operator=(const AEROFLOT& other) {
     return *this;
 }
 
-// Set-функции
+// Set functions
 void AEROFLOT::setDestination(const char* dest) {
     safeStringCopy(destination, dest);
 }
@@ -61,41 +61,41 @@ void AEROFLOT::setAircraftType(const char* type) {
     safeStringCopy(aircraftType, type);
 }
 
-// Перегрузка оператора вывода
+// Output operator overload
 std::ostream& operator<<(std::ostream& os, const AEROFLOT& flight) {
-    os << "Рейс №" << flight.flightNumber;
+    os << "Flight No" << flight.flightNumber;
     if (flight.destination) {
-        os << " в '" << flight.destination << "'";
+        os << " to '" << flight.destination << "'";
     } else {
-        os << " в 'неизвестно'";
+        os << " to 'unknown'";
     }
     if (flight.aircraftType) {
-        os << " на самолете '" << flight.aircraftType << "'";
+        os << " on aircraft '" << flight.aircraftType << "'";
     } else {
-        os << " на самолете 'неизвестно'";
+        os << " on aircraft 'unknown'";
     }
     return os;
 }
 
-// Перегрузка оператора ввода
+// Input operator overload
 std::istream& operator>>(std::istream& is, AEROFLOT& flight) {
     char buffer[100];
     
-    std::cout << "Введите пункт назначения: ";
+    std::cout << "Enter destination: ";
     is >> buffer;
     flight.setDestination(buffer);
     
-    std::cout << "Введите номер рейса: ";
+    std::cout << "Enter flight number: ";
     is >> flight.flightNumber;
     
-    std::cout << "Введите тип самолета: ";
+    std::cout << "Enter aircraft type: ";
     is >> buffer;
     flight.setAircraftType(buffer);
     
     return is;
 }
 
-// Оператор сравнения для сортировки
+// Comparison operator for sorting
 bool AEROFLOT::operator<(const AEROFLOT& other) const {
     if (!destination || !other.destination) {
         return false;
